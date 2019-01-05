@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+#// 1. Declare a basic HTML 5 page with a <head> and <body>.
+<html lang="en">
+<head>
+ <meta charset="utf-8" />
+#// 2. Set the page title to Hello World — this is the title displayed in a browser’s tab.
+<title>#(title) | Acronyms</title>
+</head>
+<body>
+#// 3. Set the body to be a single <h1> title that says Hello World.
+#// 1. Declare a new heading, “Acronyms”.
+ <h1>Acronyms</h1>
+ #// 2. Use Leaf’s #if() tag to see if the acronyms variable is set. #if() can validate variables for nullability, work on booleans or even evaluate expressions.
+ 
+ #if(acronyms) {
+ #// 3. If acronyms is set, create an HTML table. The table has a header row — <thead> — with two columns, Short and Long.
+ <table>
+     <thead>
+         <tr>
+             <th>Short</th>
+             <th>Long</th>
+         </tr>
+     </thead>
+     <tbody>
+         #// 4. Use Leaf’s #for() tag to loop through all the acronyms. This works in a similar way to Swift’s for loop.
+     #for(acronym in acronyms) {
+        <tr>
+            #// 5. Create a row for each acronym. Use Leaf’s #() function to extract the variable. Since everything is Encodable, you can use dot notation to access properties on acronyms, just like Swift!
+            <td><a href="/acronyms/#(acronym.id)">#(acronym.short)</a></td>
+            <td>#(acronym.long)</td>
+        </tr>
+     }
+     </tbody>
+ </table>
+ #// 6. If there are no acronyms, print a suitable message.
+ } else {
+    <h2>There aren't any acronyms yet!</h2>
+ }
+</body>
+</html>
