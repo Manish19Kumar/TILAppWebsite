@@ -1,10 +1,14 @@
+#// 1. Set the content variable for the base template.
 #set("content") {
-    <img src="/images/logo.png"
-        class="mx-auto d-block" alt="TIL Logo">
-    <h1>Acronyms</h1>
-    #if(acronyms) {
+    #// 2. Display the user’s name in an <h1> heading.
+    <h1>#(user.name)</h1>
+    #// 3. Display the user’s username in an <h2> heading.
+    <h2>#(user.username)</h2>
+
+    #// 4. Use a combination of Leaf’s #if tag and count tag to see if the user has any acronyms.
+    #if(count(acronyms) > 0) {
         <table class="table table-bordered table-hover">
-            <thead>
+            <thead class="thead-light">
                 <tr>
                     <th>
                         Short
@@ -13,14 +17,14 @@
                         Long
                     </th>
                 </tr>
-            <thead class="thead-light">
+            </thead>
             <tbody>
+                #// 5. Display a table of acronyms from the injected acronyms property.
                 #for(acronym in acronyms) {
                     <tr>
                         <td>
                             <a href="/acronyms/#(acronym.id)">
-                                #(acronym.short)
-                            </a>
+                                #(acronym.short)</a>
                         </td>
                         <td>#(acronym.long)</td>
                     </tr>
@@ -31,4 +35,6 @@
         <h2>There aren't any acronyms yet!</h2>
     }
 }
+
+#// 6. Embed the base template to bring in all the common HTML.
 #embed("base")

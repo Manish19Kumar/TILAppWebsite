@@ -1,19 +1,8 @@
-<!DOCTYPE html>
-#// 1. Declare an HTML5 page like index.leaf.
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        #// 2. Set the title to the value that’s passed in.
-        <title>#(title) | Acronyms</title>
-    </head>
-    <body>
-        #// 3. Print the acronym’s short property in an <h1> heading.
-        <h1>#(acronym.short)</h1>
-        #// 4. Print the acronym’s long property in an <h2> heading.
-        <h2>#(acronym.long)</h2>
-        
-        #// 5. Print the acronym’s user in a <p> block
-        <p> Created by #(user.name)</p>
-    </body>
-</html>
+#set("content") {
+    <h1>#(acronym.short)</h1>
+    <h2>#(acronym.long)</h2>
 
+<p>Created by <a href="/users/#(user.id)">#(user.name)</a></p>
+}
+
+#embed("base")

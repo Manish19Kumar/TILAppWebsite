@@ -9,6 +9,8 @@ struct WebsiteController: RouteCollection {
         router.get(use: indexHandler)
         
         router.get("acronyms", Acronym.parameter, use: acronymHandler)
+        router.get("users", User.parameter, use: userHandler)
+        router.get("users", use: allUsersHandler)
     }
     
     // 4. Implement indexHandler(_:) that returns Future<View>.
@@ -52,6 +54,40 @@ struct WebsiteController: RouteCollection {
                     })
             })
     }
+    
+    // 1. Define the route handler for the user page that returns Future<View>.
+    func userHandler(_ req: Request) throws -> Future<View> {
+        // 2. Get the user from the request’s parameters and unwrap the future.
+        return try req.parameters.next(User.self)
+            .flatMap(to: View.self, { (user) in
+                // 3. Get the user’s acronyms using the computed property and unwrap the future.
+                return try user.acronyms
+                    .query(on: req)
+                    .all()
+                    .flatMap(to: View.self, { (acronyms) in
+                        // 4. Create a UserContext, then render the user.leaf template, returning the result. In this case, you’re not setting the acronyms array to nil if it’s empty. This is not required as you’re checking the count in template.
+                        let context = UserContext(
+                            title: user.name,
+                            user: user,
+                            acronyms: acronyms)
+                        return try req.view().render("user", context)
+                    })
+            })
+    }
+    
+    // 1. Define a route handler for the “All Users” page that returns Future<View>.
+    func allUsersHandler(_ req: Request) throws -> Future<View> {
+        // 2. Get the users from the database and unwrap the future.
+        return User.query(on: req)
+            .all()
+            .flatMap(to: View.self, { (users) in
+                // 3. Create an AllUsersContext and render the allUsers.leaf template, then return the result.
+                let context = AllUsersContext(
+                    title: "All Users",
+                    users: users)
+                return try req.view().render("allUsers", context)
+            })
+    }
 }
 
 struct IndexContext: Encodable {
@@ -63,4 +99,15 @@ struct AcronymContext: Encodable {
     let title: String
     let acronym: Acronym
     let user: User
+}
+
+struct UserContext: Encodable {
+    let title: String
+    let user: User
+    let acronyms: [Acronym]
+}
+
+struct AllUsersContext: Encodable {
+    let title: String
+    let users: [User]
 }

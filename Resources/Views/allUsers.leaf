@@ -1,0 +1,36 @@
+#// 1. Set the content variable for the base template.
+#set("content") {
+    #// 2. Display an <h1> heading for “All Users”.
+    <h1>All Users</h1>
+    #// 3. See if the context provides any users. If so, create a table that contains two columns: username and name.
+    #if(count(users) > 0) {
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>
+                        Username
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                #for(user in users) {
+                    <tr>
+                        <td>
+                            <a href="/users/#(user.id)">
+                                #(user.username)
+                            </a>
+                        </td>
+                        <td>#(user.name)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    } else {
+        <h2>There aren't any users yet!</h2>
+    }
+}
+
+#embed("base")
