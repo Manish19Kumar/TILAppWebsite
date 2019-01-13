@@ -4,7 +4,7 @@
 
     <p>Created by <a href="/users/#(user.id)">#(user.name)</a></p>
     #// 1. Check if the template context has any categories.
-    #if (count(categories) > 0) {
+    #if(count(categories) > 0) {
         #// 2. If so, create a heading and a <ul> list.
         <h3>Categories</h3>
         <ul>
