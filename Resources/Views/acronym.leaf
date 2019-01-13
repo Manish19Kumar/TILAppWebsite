@@ -2,7 +2,7 @@
     <h1>#(acronym.short)</h1>
     <h2>#(acronym.long)</h2>
 
-    <p>Created by <a href="/users/#(user.id)">#(user.name)</a></p>
+    <p>Created by <a href="/users/#(user.id)/">#(user.name)</a></p>
     #// 1. Check if the template context has any categories.
     #if(count(categories) > 0) {
         #// 2. If so, create a heading and a <ul> list.

@@ -6,16 +6,14 @@
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
                 
                 <!-- Bootstrap CSS -->
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-                    
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
                     #if(title == "Create An Acronym") {
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/
-                        select2/4.0.3/css/select2.min.css" integrity="sha384-
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" integrity="sha384-
                         HIipfSYbpCkh5/1V87AWAeR5SUrNiewznrUrtNz1ux4uneLhsAKzv/0FnMbj3m6g" crossorigin="anonymous">
                     }
                     #if(title == "Edit Acronym") {
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/
-                        select2/4.0.3/css/select2.min.css" integrity="sha384-
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" integrity="sha384-
                         HIipfSYbpCkh5/1V87AWAeR5SUrNiewznrUrtNz1ux4uneLhsAKzv/0FnMbj3m6g" crossorigin="anonymous">
                     }
                     
@@ -50,7 +48,7 @@
                     </li>
                     #// 1. Add a new navigation item to the nav bar. If you’re on the “Create An Acronym” page, mark the item active.
 
-                    <li class="nav-item #if(title == "Create An Acronym") {active}">
+                    <li class="nav-item #if(title == "Create An Acronym"){active}">
                         #// 2. Add a link to the create page.
                         <a href="/acronyms/create" class="nav-link">
                             Create An Acronym
@@ -70,19 +68,17 @@
             8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
         #// 2. If the page is the create or edit acronym page, include the JavaScript for Select2.
         #if(title == "Edit Acronym") {
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/
-            select2.min.js"
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"
             integrity="sha384-222hzbb8Z8ZKe6pzP18nTSltQM3PdcAwxWKzGOKOIF+Y3bROr5n9zdQ
             8yTRHgQkQ" crossorigin="anonymous"></script>
-        #// 3. Also include the local createAcronym.js.
-        <script src="/scripts/createAcronym.js"></script>
+            #// 3. Also include the local createAcronym.js.
+            <script src="/scripts/createAcronym.js"></script>
         }
         #if(title == "Create An Acronym") {
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/
-            select2.min.js"
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"
             integrity="sha384-222hzbb8Z8ZKe6pzP18nTSltQM3PdcAwxWKzGOKOIF+Y3bROr5n9zdQ
             8yTRHgQkQ" crossorigin="anonymous"></script>
-        <script src="/scripts/createAcronym.js"></script>
+            <script src="/scripts/createAcronym.js"></script>
         }
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
