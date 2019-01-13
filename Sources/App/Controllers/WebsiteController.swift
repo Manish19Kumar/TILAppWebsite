@@ -25,7 +25,7 @@ struct WebsiteController: RouteCollection {
         
         router.get("acronyms", Acronym.parameter, "edit", use: editAcronymHandler)
         router.post("acronyms", Acronym.parameter, "edit", use: editAcronymPostHandler)
-        router.post("acronyms", Acronym.parameter, use: deleteAcronymHandler)
+        router.post("acronyms", Acronym.parameter, "delete", use: deleteAcronymHandler)
         
     }
     
