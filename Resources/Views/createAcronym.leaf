@@ -13,7 +13,7 @@
         #// 4. Create a group for the acronym’s long value using HTML’s <input> element.
         <div class="form-group">
             <label for="long">Meaning</label>
-            <input type="text" name="long" class="control" id="long" #if(editing){value="#"(acronym.long)}/>
+            <input type="text" name="long" class="control" id="long" #if(editing){value="#(acronym.long)"}/>
         </div>
         
         <div class="form-group">
