@@ -1,30 +1,24 @@
 #set("content") {
-    <h1>#(acronym.short)</h1>
-    <h2>#(acronym.long)</h2>
+<h1>#(acronym.short)</h1>
+<h2>#(acronym.long)</h2>
 
-    <p>Created by <a href="/users/#(user.id)/">#(user.name)</a></p>
-    #// 1. Check if the template context has any categories.
-    #if(count(categories) > 0) {
-        #// 2. If so, create a heading and a <ul> list.
-        <h3>Categories</h3>
-        <ul>
-            #// 3. Loop through the provided categories and add a link to each one.
-            for(category in categories) {
-                <li>
-                    <a href="/categories/#(category.id)">
-                        #(category.name)
-                    </a>
-                </li>
-            }
-        </ul>
+<p>Created by <a href="/users/#(user.id)/">#(user.name)</a></p>
+#if(count(categories) > 0) {
+<h3>Categories</h3>
+<ul>
+    #for(category in categories) {
+    <li>
+        <a href="/categories/#(category.id)">
+            #(category.name)
+        </a>
+    </li>
     }
-    #// 1. Declare a form that sends a POST request. Set the action property to /acronyms/ <ACRONYM ID>/delete. It’s good practice to use a POST request for actions that modify the database, such as create or delete. This enables you to protect them with CSRF (Cross Site Request Forgery) tokens in the future, for example.
-    <form method="post" action="/acronyms/#(acronym.id)/delete">
-        #// 2. Incorporate the edit button that already exists on the page. This allows Bootstrap to align them.
-        <a class="btn btn-primary" href="/acronyms/#(acronym.id)/edit" role="button">Edit</a>&nbsp;
-        #// 3. Create a submit button for the delete form.
-        <input class="btn btn-danger" type="submit" value="Delete" />
-    </form>
+</ul>
+}
+<form method="post" action="/acronyms/#(acronym.id)/delete">
+    <a class="btn btn-primary" href="/acronyms/#(acronym.id)/edit" role="button">Edit</a>&nbsp;
+    <input class="btn btn-danger" type="submit" value="Delete" />
+</form>
 }
 
 #embed("base")
