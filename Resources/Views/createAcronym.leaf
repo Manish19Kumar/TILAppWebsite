@@ -7,7 +7,7 @@
         #// 3. Create a group for the acronym’s short value. Use HTML’s <input> element to allow a user to insert text. The name property tells the browser what the key for this input should be when sending the data in the request.
         <div class="form-group">
             <label for="short">Acronym</label>
-            <input type="text" name="short" class="form-control" id="short" #if(editing){value="#()"}/>
+            <input type="text" name="short" class="form-control" id="short" #if(editing){value="#(acronym.short)"}/>
         </div>
         
         #// 4. Create a group for the acronym’s long value using HTML’s <input> element.
