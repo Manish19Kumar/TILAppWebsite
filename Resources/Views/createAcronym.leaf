@@ -5,7 +5,7 @@
 #// 2. Create an HTML form. Set the method to POST. This means the browser sends the data to the same URL using a POST request when a user submits the form.
     <form method="post">
         #if(csrfToken) {
-            <input type="hidden" name="csrfToken" value="#(csrcsrfToken)">
+            <input type="hidden" name="csrfToken" value="#(csrfToken)">
         }
         #// 3. Create a group for the acronym’s short value. Use HTML’s <input> element to allow a user to insert text. The name property tells the browser what the key for this input should be when sending the data in the request.
         <div class="form-group">
@@ -16,29 +16,11 @@
         #// 4. Create a group for the acronym’s long value using HTML’s <input> element.
         <div class="form-group">
             <label for="long">Meaning</label>
-            <input type="text" name="long" class="control" id="long" #if(editing){value="#(acronym.long)"}/>
+            <input type="text" name="long" class="form-control" id="long" #if(editing){value="#(acronym.long)"}/>
         </div>
-        
-        <!--
-         #// User id not required any more
-         // Because user are authenticated using authenticated protocol
-         <div class="form-group">
-            <label for="userID">User</label>
-            #// 5. Create a group for the acronym’s user. Use HTML’s <select> element to display a drop-down menu of the different users.
-
-            <select name="userID" class="form-control" id="userID">
-                #// 6. Use Leaf’s #for() loop to iterate through the provided users and add each as an option on the <select>.
-                #for(user in users) {
-                    <option value="#(user.id)"
-                        #if(editing){#if(acronym.userID == user.id){selected}}>
-                        #(user.name)
-                    </option>
-                }
-            </select>
-        </div>
-         -->
         
         #// 1. Define a new <div> for categories that’s styled with the form-group class.
+            
         <div class="form-group">
             #// 2. Specify a label for the input.
             <label for="categories">Categories</label>

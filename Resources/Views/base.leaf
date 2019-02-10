@@ -39,6 +39,14 @@
                             Create An Acronym
                         </a>
                     </li>
+                    #// 1. Check to see if there’s a logged in user. You only want to display the register link if there’s no user logged in
+                    #if(!userLoggedIn) {
+                        #// 2. Add a new navigation link to the navigation bar. Set the active class if the current page is the Register page.
+                        <li class="nav-item #if(title == "Register"){active}">
+                            #// 3. Add a link to the new /register route.
+                            <a href="/register" class="nav-link">Register</a>
+                        </li>
+                    }
                 </ul>
                 #// 1. Check to see if userLoggedIn is set so you only display the logout option when a user’s logged in.
 

@@ -21,6 +21,11 @@ struct WebsiteController: RouteCollection {
         authSessionRoutes.post(LoginPostData.self, at: "login", use: loginPostHandler)
         
         authSessionRoutes.post("logout", use: logoutHandler)
+        // 1. Connect a GET request for /register to registerHandler(_:).
+        authSessionRoutes.get("register", use: registerHandler)
+        // 2. Connect a POST request for /register to registerPostHandler(_:data:). Decode the request’s body to RegisterData.
+        authSessionRoutes.post(RegisterData.self, at: "register", use: registerPostHandler)
+        
         // This creates a new route group, extending from authSessionRoutes, that includes RedirectMiddleware. The application runs a request through RedirectMiddleware before it reaches the route handler, but after AuthenticationSessionsMiddleware. This allows RedirectMiddleware to check for an authenticated user. RedirectMiddleware requires you to specify the path for redirecting unauthenticated users and the Authenticatable type to check for. In this case, that’s your User model.
         let protectedRoutes = authSessionRoutes.grouped(RedirectMiddleware<User>(path: "/login"))
         protectedRoutes.get("acronyms", "create", use: createAcronymHandler)
@@ -77,7 +82,7 @@ struct WebsiteController: RouteCollection {
     func indexHandler(_ req: Request) throws -> Future<View> {
         // 1. Use a Fluent query to get all the acronyms from the database.
         return Acronym.query(on: req)
-        .all()
+            .all()
             .flatMap(to: View.self, { (acronyms) in
                 // 2. Add the acronyms to IndexContext if there are any, otherwise set the variable to nil. This is easier for Leaf to manage than an empty array.
                 let acronymsData = acronyms.isEmpty ? nil : acronyms
@@ -397,6 +402,50 @@ struct WebsiteController: RouteCollection {
         // 3. Return a redirect to the index page.
         return req.redirect(to: "/")
     }
+    
+    func registerHandler(_ req: Request) throws -> Future<View> {
+        let context: RegisterContext
+        if let message = req.query[String.self, at: "message"] {
+            context = RegisterContext(message: message)
+        } else {
+            context = RegisterContext()
+        }
+        return try req.view().render("register", context)
+    }
+    
+    // 1. Define a route handler that accepts a request and the decoded RegisterData.
+    func registerPostHandler(_ req: Request, data: RegisterData) throws -> Future<Response> {
+        
+        do {
+            try data.validate()
+        } catch (let error) {
+            let redirect: String
+            if let error = error as? ValidationError,
+                let message = error.reason.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                redirect = "/register?message=\(message)"
+            } else {
+                redirect = "/register?message=Unknown+\(error)"
+            }
+            return req.future(req.redirect(to: redirect))
+        }
+        
+        // 2. Hash the password submitted to the form.
+        let password = try BCrypt.hash(data.password)
+        
+        // 3. Create a new User, using the data from the form and the hashed password.
+        let user = User(name: data.name,
+                        username: data.username,
+                        password: password)
+        
+        // 4. Save the new user and unwrap the returned future.
+        return user.save(on: req).map({ (user) in
+            // 5. Authenticate the session for the new user. This automatically logs users in when they register, thereby providing a nice user experience when signing up with the site.
+            try req.authenticateSession(user)
+            
+            // 6. Return a redirect back to the home page.
+            return req.redirect(to: "/")
+        })
+    }
 }
 
 struct IndexContext: Encodable {
@@ -477,4 +526,47 @@ struct LoginContext: Encodable {
 struct LoginPostData: Content {
     let username: String
     let password: String
+}
+
+struct RegisterContext: Content {
+    let title = "Register"
+    let message: String?
+    
+    init(message: String? = nil) {
+        self.message = message
+    }
+}
+
+struct RegisterData: Content {
+    let name: String
+    let username: String
+    let password: String
+    let confirmPassword: String
+}
+
+// 1. Extend RegisterData to make it conform to Validatable and Reflectable. Validatable allows you to validate types with Vapor. Reflectable provides a way to discover the internal components of a type.
+extension RegisterData: Validatable, Reflectable {
+    // 2. Implement validations() as required by Validatable.
+    static func validations() throws -> Validations<RegisterData> {
+        // 3. Create a Validations type to contain the various validators.
+        var validations = Validations(RegisterData.self)
+        // 4. Add a validator to ensure RegisterData’s name contains only ASCII characters. Note: Be careful when adding restrictions on names like this. Some countries, such as China, don’t have names with ASCII characters.
+        try validations.add(\.name, .ascii)
+        // 5. Add a validator to ensure the username contains only alphanumeric characters and is at least 3 characters long. .count(_:) takes a Swift Range, allowing you to create both open-ended and closed ranges, if required.
+        try validations.add(\.username, .alphanumeric && .count(3...))
+        // 6. Add a validator to ensure the password is at least 8 characters long.
+        try validations.add(\.password, .count(3...))
+        
+        // 1. Use Validation’s add(_:_:) to add a custom validator for RegisterData. This takes a readable description as the first parameter. The second parameter is a closure that should throw if validation fails.
+        validations.add("passwords match") { (model) in
+            // 2. Verify that password and confirmPassword match.
+            guard model.password == model.confirmPassword else {
+                // 3. If they don’t, throw BasicValidationError.
+                throw BasicValidationError("passwords don't match")
+            }
+        }
+        
+        // 7. Return the validations for Vapor to test.
+        return validations
+    }
 }
