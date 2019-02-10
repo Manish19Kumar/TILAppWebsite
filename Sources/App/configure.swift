@@ -26,6 +26,7 @@ public func configure(
     middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
     // middlewares.use(DateMiddleware.self) // Adds `Date` header to responses
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
+    middlewares.use(SessionsMiddleware.self) // Use for managing sessions at web end
     services.register(middlewares)
     
     // Configure a database
@@ -75,4 +76,5 @@ public func configure(
     
     config.prefer(LeafRenderer.self
         , for: ViewRenderer.self)
+    config.prefer(MemoryKeyedCache.self, for: KeyedCache.self) //This tells your application to use MemoryKeyedCache when asked for the KeyedCache service.
 }
