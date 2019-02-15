@@ -433,9 +433,14 @@ struct WebsiteController: RouteCollection {
         let password = try BCrypt.hash(data.password)
         
         // 3. Create a new User, using the data from the form and the hashed password.
+        var twitterURL: String?
+        if let twitter = data.twitterURL, !twitter.isEmpty {
+            twitterURL = twitter
+        }
         let user = User(name: data.name,
                         username: data.username,
-                        password: password)
+                        password: password,
+                        twitterURL: twitterURL)
         
         // 4. Save the new user and unwrap the returned future.
         return user.save(on: req).map({ (user) in
@@ -542,6 +547,7 @@ struct RegisterData: Content {
     let username: String
     let password: String
     let confirmPassword: String
+    let twitterURL: String?
 }
 
 // 1. Extend RegisterData to make it conform to Validatable and Reflectable. Validatable allows you to validate types with Vapor. Reflectable provides a way to discover the internal components of a type.
@@ -570,3 +576,33 @@ extension RegisterData: Validatable, Reflectable {
         return validations
     }
 }
+/*
+ // Writing migrations
+ typealias Database: Fluent.Database
+ static func prepare(on connection: Database.Connection)
+ -> Future<Void>
+ static func revert(on connection: Database.Connection)
+ -> Future<Void>
+ 
+ static func prepare(on connection: PostgreSQLConnection)
+ -> Future<Void> {
+ // 1. You specify the action to perform and the model to use. If you’re adding a new Model type to the database, you use create(_:on:closure:). If you’re adding a field to an existing Model type, you use update(_:on:closure:). This example uses create(_:on:closure:) to create a new model with the field id.
+ return Database.create( NewTestUser.self,
+ on: connection
+ ) { builder in
+ // 2. Next, you specify a closure that accepts a SchemaBuilder for your model and performs the actual modifications. You call field(for:) on the builder to describe each field you’re adding to your model. Normally, you don’t need to include the type of the field as Fluent can infer the best one to use.
+
+ builder.field(for: \.id, isIdentifier: true)
+ }
+ }
+ 
+ revert(on:) is the opposite of prepare(on:). Its job is to undo whatever prepare(on:) did. If you use create(_:on:closure:) in prepare(on:), you use delete(_:on:) in revert(on:). If you use update(_:on:closure:) to add a field, you also use it in revert(on:) to remove the field with deleteField(for:).
+ Here’s an example that pairs with the prepare(on:) you saw earlier:
+
+ static func revert(on connection: PostgreSQLConnection)
+ -> Future<Void> {
+ return Database.delete(NewTestUser.self, on: connection)
+ }
+ 
+ */
+

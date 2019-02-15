@@ -7,7 +7,8 @@ struct ImperialController: RouteCollection {
     func boot(router: Router) throws {
         // 1. Get the callback URL from an environment variable — this is the URL you set up in the Google console.
         guard let callBackURL = Environment.get("GOOGLE_CALLBACK_URL") else {
-            fatalError("Callback URL not set")
+            return
+//            fatalError("Callback URL not set")
         }
         // 2.1 Register Imperial’s Google OAuth router with your app’s router.
         // 2.2 Tell Imperial to use the Google handlers.
